@@ -1,2 +1,3 @@
-# Chatbot_for_web_application
-This is a simple LLM base chat bot with interactive user interface.
+GPT-4o streamlit chatbot in Python.
+
+Video reference: https://youtu.be/j2WTq82rUr0
