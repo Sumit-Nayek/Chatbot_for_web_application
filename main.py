@@ -12,7 +12,7 @@ import openai
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 # configuring streamlit page settings
 st.set_page_config(
-    page_title="GPT-4o Chat",
+    page_title="AI For Your Medical Assistance",
     page_icon="💬",
     layout="centered"
 )
