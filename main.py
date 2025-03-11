@@ -55,7 +55,7 @@ st.markdown(
 
 
 # Streamlit app title
-st.title("🤖 AI Chatbot Using OpenRouter")
+st.title("🤖 AI Chatbot For Your Medical Assistance")
 
 # Initialize session state to store chat history
 if "messages" not in st.session_state:
