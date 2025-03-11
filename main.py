@@ -1,11 +1,12 @@
 import streamlit as st
-from openai import OpenAI
+import requests
 
-# Initialize the OpenAI client
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# OpenRouter API details
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Streamlit app title
-st.title("🤖 AI Chatbot Using LLM")
+st.title("🤖 AI Chatbot Using OpenRouter")
 
 # Initialize session state to store chat history
 if "messages" not in st.session_state:
@@ -23,14 +24,27 @@ if prompt := st.chat_input("How can I help you?"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Generate AI response
-    with st.chat_message("assistant"):
-        response = client.chat.completions.create(
-            model="deepseek/deepseek-r1-zero:free",  # Use "gpt-3.5-turbo" if GPT-4 is not available
-            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-        )
-        ai_response = response.choices[0].message.content
-        st.markdown(ai_response)
+    # Prepare the request payload for OpenRouter
+    payload = {
+        "model": "deepseek/deepseek-r1-zero:free",  # Specify the model
+        "messages": st.session_state.messages,
+    }
+
+    # Make the API request to OpenRouter
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        response = requests.post(OPENROUTER_API_URL, json=payload, headers=headers)
+        response.raise_for_status()  # Raise an error for bad status codes
+        ai_response = response.json()["choices"][0]["message"]["content"]
+    except requests.exceptions.RequestException as e:
+        st.error(f"API request failed: {e}")
+        ai_response = "Sorry, I couldn't process your request. Please try again."
 
     # Add AI response to chat history
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+    with st.chat_message("assistant"):
+        st.markdown(ai_response)
