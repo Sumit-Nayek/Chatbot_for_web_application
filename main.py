@@ -26,7 +26,7 @@ if prompt := st.chat_input("How can I help you?"):
     # Generate AI response
     with st.chat_message("assistant"):
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # Use "gpt-3.5-turbo" if GPT-4 is not available
+            model="gpt-3.5-turbo",  # Use "gpt-3.5-turbo" if GPT-4 is not available
             messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
         )
         ai_response = response.choices[0].message["content"]
