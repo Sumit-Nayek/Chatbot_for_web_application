@@ -10,19 +10,13 @@ import openai
 #OPENAI_API_KEY = config_data["OPENAI_API_KEY"]
 #openai.api_key = OPENAI_API_KEY
 openai.api_key = st.secrets["OPENAI_API_KEY"]
-# configuring streamlit page settings
-st.set_page_config(
-    page_title="AI For Your Medical Assistance",
-    page_icon="💬",
-    layout="centered"
-)
 
 # initialize chat session in streamlit if not already present
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # streamlit page title
-#st.title("🤖 GPT-4o - ChatBot")
+st.title("🤖 AI For Your Medical Assistance")
 
 # display chat history
 for message in st.session_state.chat_history:
