@@ -85,8 +85,8 @@ if prompt := st.chat_input("How can I help you?"):
 
     # Prepare the request payload for OpenRouter
     payload = {
-        # "model": "openai/gpt-3.5-turbo",
-        "model":"deepseek/deepseek-r1-zero:free",# Specify the model
+        "model": "openai/gpt-3.5-turbo",
+        # "model":"deepseek/deepseek-r1-zero:free",# Specify the model
         "messages": st.session_state.messages + [
             {
                 "role": "system",
