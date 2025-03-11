@@ -5,11 +5,11 @@ import streamlit as st
 import openai
 
 # configuring openai - api key
-working_dir = os.path.dirname(os.path.abspath(__file__))
-config_data = json.load(open(f"{working_dir}/config.json"))
-OPENAI_API_KEY = config_data["OPENAI_API_KEY"]
-openai.api_key = OPENAI_API_KEY
-
+#working_dir = os.path.dirname(os.path.abspath(__file__))
+#config_data = json.load(open(f"{working_dir}/config.json"))
+#OPENAI_API_KEY = config_data["OPENAI_API_KEY"]
+#openai.api_key = OPENAI_API_KEY
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 # configuring streamlit page settings
 st.set_page_config(
     page_title="GPT-4o Chat",
@@ -31,7 +31,7 @@ for message in st.session_state.chat_history:
 
 
 # input field for user's message
-user_prompt = st.chat_input("Ask GPT-4o...")
+user_prompt = st.chat_input("Hellow User, How can I help you Today")
 
 if user_prompt:
     # add user's message to chat and display it
@@ -53,3 +53,4 @@ if user_prompt:
     # display GPT-4o's response
     with st.chat_message("assistant"):
         st.markdown(assistant_response)
+#####################
