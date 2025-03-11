@@ -34,7 +34,7 @@ if user_prompt:
 
     # send user's message to GPT-4o and get a response
     response = openai.chat.completions.create(
-        model="gpt-4o",
+        model="meta-llama/llama-3.2-3b-instruct:free",
         messages=[
             {"role": "system", "content": "You are a helpful assistant"},
             *st.session_state.chat_history
