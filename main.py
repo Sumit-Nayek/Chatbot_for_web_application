@@ -1,11 +1,11 @@
-import os
-import json
-
 import streamlit as st
-import openai
+from openai import OpenAI
 
+# Initialize the OpenAI client
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Streamlit app title
+st.title("🤖 AI Chatbot Using LLM")
 
 # Initialize session state to store chat history
 if "messages" not in st.session_state:
@@ -25,13 +25,12 @@ if prompt := st.chat_input("How can I help you?"):
 
     # Generate AI response
     with st.chat_message("assistant"):
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # Use "gpt-3.5-turbo" if GPT-4 is not available
             messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
         )
-        ai_response = response.choices[0].message["content"]
+        ai_response = response.choices[0].message.content
         st.markdown(ai_response)
 
     # Add AI response to chat history
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
-    #####################
