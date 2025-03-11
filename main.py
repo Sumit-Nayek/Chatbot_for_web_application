@@ -4,47 +4,34 @@ import json
 import streamlit as st
 import openai
 
-# configuring openai - api key
-#working_dir = os.path.dirname(os.path.abspath(__file__))
-#config_data = json.load(open(f"{working_dir}/config.json"))
-#OPENAI_API_KEY = config_data["OPENAI_API_KEY"]
-#openai.api_key = OPENAI_API_KEY
+
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# initialize chat session in streamlit if not already present
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+# Initialize session state to store chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# streamlit page title
-st.title("🤖 AI For Your Medical Assistance")
-
-# display chat history
-for message in st.session_state.chat_history:
+# Display chat history
+for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# Chat input
+if prompt := st.chat_input("How can I help you?"):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-# input field for user's message
-user_prompt = st.chat_input("Hellow User, How can I help you Today")
-
-if user_prompt:
-    # add user's message to chat and display it
-    st.chat_message("user").markdown(user_prompt)
-    st.session_state.chat_history.append({"role": "user", "content": user_prompt})
-
-    # send user's message to GPT-4o and get a response
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant"},
-            *st.session_state.chat_history
-        ]
-    )
-
-    assistant_response = response.choices[0].message.content
-    st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
-
-    # display GPT-4o's response
+    # Generate AI response
     with st.chat_message("assistant"):
-        st.markdown(assistant_response)
-#####################
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Use "gpt-3.5-turbo" if GPT-4 is not available
+            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+        )
+        ai_response = response.choices[0].message["content"]
+        st.markdown(ai_response)
+
+    # Add AI response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": ai_response})
+    #####################
