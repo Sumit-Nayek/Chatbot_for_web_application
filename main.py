@@ -96,7 +96,7 @@ if prompt := st.chat_input("How can I help you?"):
     messages = st.session_state.messages + [
         {
             "role": "system",
-            "content": "You are a helpful health advisor providing guidance on COVID-19. Respond in a concise, conversational tone.",
+            "content": "You are a helpful health advisor providing guidance on COVID-19. Respond in a concise, conversational tone and give location specific suggestion for hospitalization.",
         }
     ]
 
