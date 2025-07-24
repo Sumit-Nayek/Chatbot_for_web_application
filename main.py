@@ -66,6 +66,10 @@ st.title("🤖 AI For Your Medical Assistance")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+## Mannual button to clear the chat history
+if st.button("🗑️ Clear Chat"):
+    st.session_state.messages = []
+    st.success("Chat history cleared!")
 # Display chat history
 for message in st.session_state.messages:
     if message["role"] == "user":
