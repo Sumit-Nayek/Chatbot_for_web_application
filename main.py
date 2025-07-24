@@ -1,9 +1,16 @@
 import streamlit as st
-import requests
+from openai import OpenAI
 
-# OpenRouter API details
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
-OPENROUTER_API_URL = "https://openrouter.ai/api/v1"
+# Initialize OpenAI client for OpenRouter
+OPENROUTER_API_KEY = st.secrets.get("OPENROUTER_API_KEY", None)
+if not OPENROUTER_API_KEY:
+    st.error("API key not found. Please set OPENROUTER_API_KEY in Streamlit secrets.")
+    st.stop()
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=OPENROUTER_API_KEY,
+)
 
 # Custom CSS for chat interface
 st.markdown(
@@ -52,8 +59,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-
-
 # Streamlit app title
 st.title("🤖 AI For Your Medical Assistance")
 
@@ -83,29 +88,27 @@ if prompt := st.chat_input("How can I help you?"):
         unsafe_allow_html=True,
     )
 
-    # Prepare the request payload for OpenRouter
-    payload = {
-        "model": "openai/gpt-3.5-turbo",
-        # "model":"deepseek/deepseek-r1-zero",# Specify the model
-        "messages": st.session_state.messages + [
-            {
-                "role": "system",
-                "content": "You are a helpful health advisor providing guidance on COVID-19. Respond in a concise, conversational tone.",
-            }
-        ],
-    }
-    # Make the API request to OpenRouter
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json",
-    }
+    # Prepare messages for OpenRouter, including system prompt
+    messages = st.session_state.messages + [
+        {
+            "role": "system",
+            "content": "You are a helpful health advisor providing guidance on COVID-19. Respond in a concise, conversational tone.",
+        }
+    ]
 
+    # Make the API request to OpenRouter using OpenAI client
     try:
-        response = requests.post(OPENROUTER_API_URL, json=payload, headers=headers)
-        response.raise_for_status()  # Raise an error for bad status codes
-        ai_response = response.json()["choices"][0]["message"]["content"]
-    except requests.exceptions.RequestException as e:
-        st.error(f"API request failed: {e}")
+        completion = client.chat.completions.create(
+            extra_headers={
+                "HTTP-Referer": "http://localhost:8501",  # Replace with your site URL
+                "X-Title": "Medical Assistance App",      # Replace with your app name
+            },
+            model="deepseek/deepseek-r1:free",  # Use the model you want
+            messages=messages,
+        )
+        ai_response = completion.choices[0].message.content
+    except Exception as e:
+        st.error(f"API request failed: {str(e)}")
         ai_response = "Sorry, I couldn't process your request. Please try again."
 
     # Add AI response to chat history
