@@ -1,10 +1,5 @@
 ---
 
-# Chatbot for Web Application
-
-A simple LLM-based chatbot with an interactive user interface.
-
----
 
 ## 🚀 Project Overview
 
