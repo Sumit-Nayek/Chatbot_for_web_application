@@ -100,7 +100,7 @@ if prompt := st.chat_input("How can I help you?"):
         }
     ]
 
-    # Make the API request to OpenRouter using OpenAI client
+# Make the API request to OpenRouter using OpenAI client
     try:
         completion = client.chat.completions.create(
             extra_headers={
@@ -115,7 +115,7 @@ if prompt := st.chat_input("How can I help you?"):
         st.error(f"API request failed: {str(e)}")
         ai_response = "Sorry, I couldn't process your request. Please try again."
 
-    # Add AI response to chat history
+# Add AI response to chat history
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
     st.markdown(
         f'<div class="chat-container"><div class="ai-message">{ai_response}</div></div>',
