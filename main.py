@@ -92,7 +92,7 @@ if prompt := st.chat_input("How can I help you?"):
         unsafe_allow_html=True,
     )
 
-    # Prepare messages for OpenRouter, including system prompt
+# Prepare messages for OpenRouter, including system prompt
     messages = st.session_state.messages + [
         {
             "role": "system",
